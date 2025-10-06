@@ -1,3 +1,6 @@
+# Custom DaemonSet for comprehensive node monitoring
+# Runs Filebeat + node-exporter on every cluster node
+# Created by Yathee for centralized logging and metrics collection
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
@@ -6,6 +9,7 @@ metadata:
   labels:
     app: logging-daemon
     k8s-app: logging-daemon
+    version: "1.0"  # Personal versioning for this deployment
 spec:
   selector:
     matchLabels:
@@ -22,6 +26,8 @@ spec:
       serviceAccountName: logging-daemon
       hostNetwork: true
       dnsPolicy: ClusterFirstWithHostNet
+      # Tolerations to run on all nodes including masters
+      # Note: both master and control-plane keys needed for compatibility
       tolerations:
       - key: node-role.kubernetes.io/master
         effect: NoSchedule

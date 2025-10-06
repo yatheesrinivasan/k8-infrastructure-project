@@ -1,7 +1,7 @@
 variable "aws_region" {
   description = "AWS region for resources"
   type        = string
-  default     = "us-west-2"
+  default     = "us-west-2"  # Using us-west-2 for better pricing on some instance types
 }
 
 variable "cluster_name" {
@@ -12,14 +12,13 @@ variable "cluster_name" {
 variable "environment" {
   description = "Environment name (dev, staging, prod)"
   type        = string
-  
+
+  # Validation to prevent typos in environment names
   validation {
     condition     = contains(["dev", "staging", "prod"], var.environment)
     error_message = "Environment must be one of: dev, staging, prod."
   }
-}
-
-variable "kubernetes_version" {
+}variable "kubernetes_version" {
   description = "Kubernetes version for EKS cluster"
   type        = string
   default     = "1.27"

@@ -661,6 +661,5 @@ This project represents my approach to building production-grade infrastructure:
 
 ---
 
----
 
-**⭐ If this project demonstrates valuable skills for your team, I'd love to discuss how I can contribute!**
+

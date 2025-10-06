@@ -594,14 +594,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Kubernetes Community** for the orchestration platform
 
 ---
-
-## 📞 Support
-
-For questions, issues, or contributions:
-- 🐛 **Issues**: Create an issue in this repository
-- 💬 **Discussions**: Use GitHub Discussions for questions
-- 📧 **Security**: Report security issues privately via email
-
----
-
-**⭐ If this project helped you, please consider giving it a star!**

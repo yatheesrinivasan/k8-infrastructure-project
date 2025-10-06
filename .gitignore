@@ -1,0 +1,67 @@
+# Terraform
+*.tfstate
+*.tfstate.*
+*.tfvars.backup
+*.tfplan
+.terraform/
+.terraform.lock.hcl
+crash.log
+
+# AWS
+.aws/
+
+# Kubernetes
+*.kubeconfig
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Security Reports
+security/reports/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Node modules (if using any JS tools)
+node_modules/
+
+# Python (if using any Python tools)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Helm
+charts/*.tgz
+
+# Backup files
+*.backup
+*.bak
+
+# Local environment files
+.env
+.env.local
+
+# Generated certificates
+*.crt
+*.key
+*.pem
+
+# Monitoring data
+prometheus-data/
+grafana-data/

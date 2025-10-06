@@ -1,6 +1,6 @@
 # Enterprise Kubernetes Infrastructure Project
 
-**Personal Project by Yatheesha Srinivasan**
+**Personal Project by Yathee Srinivasan**
 
 A production-ready Kubernetes infrastructure built from scratch, demonstrating enterprise-grade DevOps practices, infrastructure as code, and cloud-native technologies. This project showcases my expertise in Kubernetes, Terraform, AWS, and security best practices.
 
@@ -663,7 +663,7 @@ This project represents my approach to building production-grade infrastructure:
 
 ## 📞 Contact
 
-**Yatheesha Srinivasan**
+**Yathee Srinivasan**
 - 📧 **Email**: yathee.srinivasan.s@gmail.com
 - 💼 **LinkedIn**: [Connect with me](https://linkedin.com/in/yatheesrinivasan)
 - 🚀 **GitHub**: [@yatheesrinivasan](https://github.com/yatheesrinivasan)

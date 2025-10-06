@@ -1,6 +1,6 @@
 # Kubernetes Infrastructure Project - Status Report
 
-**Project by: Yatheesha Srinivasan**
+**Project by: Yathee Srinivasan**
 
 ## 🎯 Development Status: COMPLETED ✅
 

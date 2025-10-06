@@ -1,6 +1,6 @@
 # Kubernetes Infrastructure Project - Development Notes
 
-**Personal Project by Yatheesha Srinivasan**
+**Personal Project by Yathee Srinivasan**
 
 This document outlines my development approach, technical standards, and testing methodologies used in building this enterprise Kubernetes infrastructure.
 

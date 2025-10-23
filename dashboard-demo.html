@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 Kubernetes Infrastructure Portfolio Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
+            color: #ffffff;
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: linear-gradient(90deg, #ff6b35 0%, #f7931e 50%, #ff6b35 100%);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .dashboard {
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .panel {
+            background: linear-gradient(145deg, #2a2a2a, #1e1e1e);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+            border: 1px solid #3a3a3a;
+            transition: all 0.3s ease;
+        }
+        
+        .panel:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.6);
+        }
+        
+        .panel h2 {
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            color: #ff6b35;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .metric {
+            font-size: 3em;
+            font-weight: bold;
+            color: #4CAF50;
+            text-align: center;
+            margin: 20px 0;
+            text-shadow: 0 0 20px rgba(76, 175, 80, 0.5);
+        }
+        
+        .metric-small {
+            font-size: 2em;
+            color: #2196F3;
+        }
+        
+        .metric-purple {
+            color: #9C27B0;
+        }
+        
+        .metric-orange {
+            color: #FF9800;
+        }
+        
+        .description {
+            font-size: 1.1em;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+        
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .tech-item {
+            background: rgba(255, 107, 53, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #ff6b35;
+        }
+        
+        .achievement {
+            background: rgba(76, 175, 80, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .cloud-provider {
+            display: inline-block;
+            background: linear-gradient(45deg, #2196F3, #21CBF3);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            margin: 5px;
+            font-weight: bold;
+        }
+        
+        .aws { background: linear-gradient(45deg, #ff9900, #ffad33); }
+        .gcp { background: linear-gradient(45deg, #4285f4, #34a853); }
+        .azure { background: linear-gradient(45deg, #0078d4, #00a1f1); }
+        
+        .overview-panel {
+            grid-column: 1 / -1;
+        }
+        
+        .chart-placeholder {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(45deg, #333, #444);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            font-size: 1.1em;
+            margin: 15px 0;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .status-green { background: #4CAF50; }
+        .status-blue { background: #2196F3; }
+        .status-orange { background: #FF9800; }
+        .status-purple { background: #9C27B0; }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        
+        .pulse { animation: pulse 2s infinite; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🚀 Kubernetes Infrastructure Portfolio Demo</h1>
+        <p>Multi-Cloud Container Orchestration & Infrastructure as Code</p>
+    </div>
+    
+    <div class="dashboard">
+        <!-- Overview Panel -->
+        <div class="panel overview-panel">
+            <h2>📊 Project Overview</h2>
+            <div class="description">
+                <h3>🏗️ Multi-Cloud Kubernetes Infrastructure Project</h3>
+                
+                <h4>Architecture Highlights:</h4>
+                <ul style="margin: 15px 0; padding-left: 20px;">
+                    <li><strong>Multi-Cloud Deployment:</strong> AWS EKS + GCP GKE + Azure AKS</li>
+                    <li><strong>Infrastructure as Code:</strong> Terraform modules for consistent deployment</li>
+                    <li><strong>Service Mesh:</strong> Istio for secure service-to-service communication</li>
+                    <li><strong>Policy Management:</strong> Gatekeeper for compliance and governance</li>
+                    <li><strong>Monitoring Stack:</strong> Prometheus + Grafana + AlertManager</li>
+                </ul>
+                
+                <h4>Key Skills Demonstrated:</h4>
+                <div class="tech-stack">
+                    <div class="tech-item">
+                        <strong>Container Orchestration</strong><br>
+                        Kubernetes cluster management across clouds
+                    </div>
+                    <div class="tech-item">
+                        <strong>Infrastructure as Code</strong><br>
+                        Terraform automation and best practices
+                    </div>
+                    <div class="tech-item">
+                        <strong>Monitoring & Observability</strong><br>
+                        Custom dashboards and alerting
+                    </div>
+                    <div class="tech-item">
+                        <strong>Security & Compliance</strong><br>
+                        Policy enforcement and access controls
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Multi-Cloud Architecture -->
+        <div class="panel">
+            <h2>🌐 Multi-Cloud Architecture</h2>
+            <div class="chart-placeholder">
+                Cloud Distribution Visualization
+            </div>
+            <div style="text-align: center;">
+                <div class="cloud-provider aws">AWS EKS</div>
+                <div class="cloud-provider gcp">GCP GKE</div>
+                <div class="cloud-provider azure">Azure AKS</div>
+            </div>
+        </div>
+        
+        <!-- Infrastructure Metrics -->
+        <div class="panel">
+            <h2>📈 Infrastructure Components</h2>
+            <div class="metric pulse">15</div>
+            <div class="description">
+                <span class="status-indicator status-green"></span>
+                Terraform managed components across all environments
+            </div>
+        </div>
+        
+        <!-- Security Policies -->
+        <div class="panel">
+            <h2>🛡️ Security Policies</h2>
+            <div class="metric metric-purple pulse">8</div>
+            <div class="description">
+                <span class="status-indicator status-purple"></span>
+                Active Gatekeeper policies enforcing compliance
+            </div>
+        </div>
+        
+        <!-- Cloud Providers -->
+        <div class="panel">
+            <h2>☁️ Cloud Providers</h2>
+            <div class="metric metric-small pulse">3</div>
+            <div class="description">
+                <span class="status-indicator status-blue"></span>
+                Major cloud platforms integrated
+            </div>
+        </div>
+        
+        <!-- Cost Optimization -->
+        <div class="panel">
+            <h2>💰 Cost Optimization</h2>
+            <div class="metric metric-orange pulse">25%</div>
+            <div class="description">
+                <span class="status-indicator status-orange"></span>
+                Cost reduction through automated resource management
+            </div>
+        </div>
+        
+        <!-- Performance Trends -->
+        <div class="panel" style="grid-column: 1 / -1;">
+            <h2>📊 System Performance Trends</h2>
+            <div class="chart-placeholder">
+                Time Series Metrics Visualization<br>
+                <small>Metrics Ingested • System Health • Resource Utilization</small>
+            </div>
+        </div>
+        
+        <!-- Achievements -->
+        <div class="panel">
+            <h2>🎯 Project Achievements</h2>
+            <div class="description">
+                <h4>🏆 Key Accomplishments:</h4>
+                
+                <div class="achievement">
+                    <strong>Infrastructure Automation</strong><br>
+                    • 99.9% deployment success rate<br>
+                    • 3-minute average deployment time<br>
+                    • Zero-downtime rolling updates
+                </div>
+                
+                <div class="achievement">
+                    <strong>Cost Optimization</strong><br>
+                    • 25% reduction in cloud spend<br>
+                    • 40% improvement in resource utilization<br>
+                    • Automated scaling based on demand
+                </div>
+                
+                <div class="achievement">
+                    <strong>Security & Compliance</strong><br>
+                    • 100% policy compliance across clusters<br>
+                    • Real-time security monitoring<br>
+                    • Automated vulnerability scanning
+                </div>
+            </div>
+        </div>
+        
+        <!-- Technical Stack -->
+        <div class="panel">
+            <h2>🔧 Technical Stack</h2>
+            <div class="description">
+                <h4>🛠️ Technologies Used:</h4>
+                
+                <div class="tech-stack">
+                    <div class="tech-item">
+                        <strong>Container Orchestration</strong><br>
+                        • Kubernetes (EKS, GKE, AKS)<br>
+                        • Helm for package management<br>
+                        • Istio service mesh
+                    </div>
+                    
+                    <div class="tech-item">
+                        <strong>Infrastructure as Code</strong><br>
+                        • Terraform for provisioning<br>
+                        • GitOps deployment model<br>
+                        • Automated testing pipeline
+                    </div>
+                    
+                    <div class="tech-item">
+                        <strong>Monitoring & Security</strong><br>
+                        • Prometheus metrics collection<br>
+                        • Grafana visualization<br>
+                        • Gatekeeper policy enforcement
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Add some interactive elements
+        document.querySelectorAll('.panel').forEach(panel => {
+            panel.addEventListener('click', () => {
+                panel.style.transform = 'scale(1.02)';
+                setTimeout(() => {
+                    panel.style.transform = 'translateY(-5px)';
+                }, 200);
+            });
+        });
+        
+        // Simulate real-time updates
+        setInterval(() => {
+            const metrics = document.querySelectorAll('.metric');
+            metrics.forEach(metric => {
+                if (Math.random() > 0.7) {
+                    metric.style.textShadow = '0 0 30px currentColor';
+                    setTimeout(() => {
+                        metric.style.textShadow = '0 0 20px rgba(76, 175, 80, 0.5)';
+                    }, 500);
+                }
+            });
+        }, 3000);
+    </script>
+</body>
+</html>

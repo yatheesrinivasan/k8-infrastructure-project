@@ -1,0 +1,28 @@
+# GitHub Codespaces Grafana Demo Setup
+name: grafana-demo
+
+on:
+  codespaces:
+    - opened
+
+services:
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin123
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_INSTALL_PLUGINS=grafana-kubernetes-app
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus:/etc/prometheus
+
+postCreateCommand: |
+  echo "🚀 Setting up Grafana Demo Environment..."
+  echo "📊 Grafana will be available at: https://$CODESPACE_NAME-3000.preview.$CODESPACE_VHOST_DOMAIN"
+  echo "👤 Login: admin / admin123"

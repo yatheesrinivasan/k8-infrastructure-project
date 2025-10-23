@@ -39,7 +39,7 @@ spec:
         effect: NoSchedule
       containers:
       - name: filebeat
-        image: docker.elastic.co/beats/filebeat:8.11.0
+        image: docker.elastic.co/beats/filebeat:8.15.0
         args:
         - -c
         - /etc/filebeat.yml
@@ -98,7 +98,7 @@ spec:
           initialDelaySeconds: 10
           periodSeconds: 5
       - name: node-exporter
-        image: prom/node-exporter:v1.6.1
+        image: prom/node-exporter:v1.8.2
         args:
         - --path.sysfs=/host/sys
         - --path.rootfs=/host/root

@@ -21,7 +21,7 @@ variable "environment" {
 }variable "kubernetes_version" {
   description = "Kubernetes version for EKS cluster"
   type        = string
-  default     = "1.27"
+  default     = "1.29"  # Updated to current LTS version
 }
 
 variable "vpc_cidr" {

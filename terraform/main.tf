@@ -1,56 +1,30 @@
-terraform {terraform {
+terraform {
+  required_version = ">= 1.0"
 
-  required_version = ">= 1.0"  required_version = ">= 1.0"
+  # TODO: Eventually move to remote state backend for team collaboration
+  # backend "s3" {
+  #   bucket = "yathee-terraform-state"
+  #   key    = "k8s-infrastructure/terraform.tfstate"
+  #   region = "us-west-2"
+  # }
 
-    
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.70"  # Updated to current stable version
+    }
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = "~> 2.32"  # Updated to current stable version
+    }
+    helm = {
+      source  = "hashicorp/helm"
+      version = "~> 2.15"  # Updated to current stable version
+    }
+  }
+}
 
-  # TODO: Eventually move to remote state backend for team collaboration  # TODO: Eventually move to remote state backend for team collaboration
-
-  # backend "s3" {  # backend "s3" {
-
-  #   bucket = "yathee-terraform-state"  #   bucket = "my-terraform-state-bucket"
-
-  #   key    = "k8s-infrastructure/terraform.tfstate"  #   key    = "k8s-infrastructure/terraform.tfstate"
-
-  #   region = "us-west-2"  #   region = "us-west-2"
-
-  # }  # }
-
-    
-
-  required_providers {  required_providers {
-
-    aws = {    aws = {
-
-      source  = "hashicorp/aws"      source  = "hashicorp/aws"
-
-      version = "~> 5.0"  # Locked to major version to avoid breaking changes      version = "~> 5.0"  # Locked to major version to avoid breaking changes
-
-    }    }
-
-    kubernetes = {    kubernetes = {
-
-      source  = "hashicorp/kubernetes"      source  = "hashicorp/kubernetes"
-
-      version = "~> 2.23"      version = "~> 2.23"
-
-    }    }
-
-    helm = {    helm = {
-
-      source  = "hashicorp/helm"      source  = "hashicorp/helm"
-
-      version = "~> 2.10"      version = "~> 2.10"
-
-    }    }
-
-  }  }
-
-}}
-
-
-
-provider "aws" {provider "aws" {
+provider "aws" {
 
   region = var.aws_region  region = var.aws_region
 

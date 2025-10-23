@@ -1,0 +1,125 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: multi-cloud-metrics
+  namespace: monitoring
+  labels:
+    app: multi-cloud-monitoring
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: multi-cloud-exporter
+  endpoints:
+  - port: metrics
+    interval: 30s
+    path: /metrics
+    scheme: http
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: jaeger-metrics
+  namespace: observability
+  labels:
+    app: jaeger-monitoring
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: jaeger
+  endpoints:
+  - port: admin-http
+    interval: 15s
+    path: /metrics
+    scheme: http
+  namespaceSelector:
+    matchNames:
+    - observability
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: loki-metrics
+  namespace: observability
+  labels:
+    app: loki-monitoring
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: loki
+  endpoints:
+  - port: http-metrics
+    interval: 30s
+    path: /metrics
+    scheme: http
+  namespaceSelector:
+    matchNames:
+    - observability
+
+---
+# PrometheusRule for multi-cloud alerts
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: multi-cloud-alerts
+  namespace: monitoring
+  labels:
+    app: multi-cloud-monitoring
+    release: prometheus
+spec:
+  groups:
+  - name: multi-cloud.rules
+    rules:
+    - alert: CrossCloudLatencyHigh
+      expr: histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket{job="cross-cloud-proxy"}[5m])) by (le, source_cloud, target_cloud)) > 0.5
+      for: 2m
+      labels:
+        severity: warning
+        component: networking
+      annotations:
+        summary: "High latency detected in cross-cloud communication"
+        description: "Cross-cloud latency between {{ $labels.source_cloud }} and {{ $labels.target_cloud }} is {{ $value }}s"
+
+    - alert: CloudProviderDown
+      expr: up{job="kubernetes-nodes"} == 0
+      for: 1m
+      labels:
+        severity: critical
+        component: infrastructure
+      annotations:
+        summary: "Cloud provider cluster is down"
+        description: "No nodes are available in {{ $labels.cloud_provider }} cluster {{ $labels.cluster }}"
+
+    - alert: MultiCloudCostSpike
+      expr: increase(cloud_billing_cost_usd[1h]) > increase(cloud_billing_cost_usd[1h] offset 24h) * 1.5
+      for: 15m
+      labels:
+        severity: warning
+        component: cost
+      annotations:
+        summary: "Unexpected cost increase detected"
+        description: "Costs in {{ $labels.cloud_provider }} have increased by more than 50% compared to same time yesterday"
+
+    - alert: JaegerTraceErrors
+      expr: sum(rate(jaeger_spans_total{span_kind="server",status_code!="OK"}[5m])) / sum(rate(jaeger_spans_total{span_kind="server"}[5m])) > 0.05
+      for: 5m
+      labels:
+        severity: warning
+        component: tracing
+      annotations:
+        summary: "High error rate in distributed tracing"
+        description: "Error rate in traces is {{ $value | humanizePercentage }} for service {{ $labels.service_name }}"
+
+    - alert: StorageVolumeAlmostFull
+      expr: (kubelet_volume_stats_used_bytes / kubelet_volume_stats_capacity_bytes) * 100 > 85
+      for: 10m
+      labels:
+        severity: warning
+        component: storage
+      annotations:
+        summary: "Persistent volume is almost full"
+        description: "Volume {{ $labels.persistentvolumeclaim }} in namespace {{ $labels.namespace }} is {{ $value }}% full"

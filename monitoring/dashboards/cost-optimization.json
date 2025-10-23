@@ -1,0 +1,249 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "Multi-Cloud Cost Optimization Dashboard",
+    "tags": ["cost", "optimization", "multi-cloud", "billing"],
+    "style": "dark", 
+    "timezone": "browser",
+    "refresh": "5m",
+    "schemaVersion": 30,
+    "version": 1,
+    "time": {
+      "from": "now-7d",
+      "to": "now"
+    },
+    "panels": [
+      {
+        "id": 1,
+        "title": "Daily Costs by Cloud Provider",
+        "type": "timeseries",
+        "gridPos": {"h": 8, "w": 24, "x": 0, "y": 0},
+        "options": {
+          "tooltip": {"mode": "multi"},
+          "legend": {
+            "displayMode": "table",
+            "placement": "bottom",
+            "values": ["value", "max", "min"]
+          }
+        },
+        "targets": [
+          {
+            "expr": "sum by (cloud_provider) (increase(cloud_billing_cost_usd[1d]))",
+            "legendFormat": "{{cloud_provider}}",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "unit": "currencyUSD"
+          }
+        }
+      },
+      {
+        "id": 2,
+        "title": "Resource Utilization vs Cost",
+        "type": "scatterplot",
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8},
+        "options": {
+          "series": [
+            {
+              "x": "CPU Utilization",
+              "y": "Cost per Hour"
+            }
+          ]
+        },
+        "targets": [
+          {
+            "expr": "avg by (instance) (rate(node_cpu_seconds_total{mode!=\"idle\"}[5m])) * 100",
+            "legendFormat": "CPU Utilization",
+            "refId": "A"
+          },
+          {
+            "expr": "cloud_instance_cost_per_hour",
+            "legendFormat": "Cost per Hour", 
+            "refId": "B"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            }
+          }
+        }
+      },
+      {
+        "id": 3,
+        "title": "Unused Resources Alert",
+        "type": "stat",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8},
+        "options": {
+          "colorMode": "background",
+          "graphMode": "area"
+        },
+        "targets": [
+          {
+            "expr": "sum(kube_pod_container_resource_requests_cpu_cores) / sum(kube_node_status_allocatable_cpu_cores) * 100",
+            "legendFormat": "CPU Request Utilization %",
+            "refId": "A"
+          },
+          {
+            "expr": "sum(kube_pod_container_resource_requests_memory_bytes) / sum(kube_node_status_allocatable_memory_bytes) * 100",
+            "legendFormat": "Memory Request Utilization %",
+            "refId": "B"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "unit": "percent",
+            "thresholds": {
+              "steps": [
+                {"color": "red", "value": null},
+                {"color": "yellow", "value": 60},
+                {"color": "green", "value": 80}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 4,
+        "title": "Cost Breakdown by Service",
+        "type": "piechart", 
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 16},
+        "options": {
+          "pieType": "pie",
+          "tooltip": {"mode": "single"},
+          "legend": {
+            "displayMode": "visible",
+            "placement": "right",
+            "values": ["value", "percent"]
+          }
+        },
+        "targets": [
+          {
+            "expr": "sum by (service) (increase(cloud_service_cost_usd[1d]))",
+            "legendFormat": "{{service}}",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "unit": "currencyUSD"
+          }
+        }
+      },
+      {
+        "id": 5,
+        "title": "Spot Instance Savings",
+        "type": "timeseries",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 16},
+        "options": {
+          "tooltip": {"mode": "multi"},
+          "legend": {
+            "displayMode": "table",
+            "placement": "bottom"
+          }
+        },
+        "targets": [
+          {
+            "expr": "sum by (cloud_provider) (cloud_spot_instance_savings_usd)",
+            "legendFormat": "Savings - {{cloud_provider}}",
+            "refId": "A"
+          },
+          {
+            "expr": "sum by (cloud_provider) (cloud_ondemand_cost_usd - cloud_spot_cost_usd)",
+            "legendFormat": "Potential Savings - {{cloud_provider}}",
+            "refId": "B"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "unit": "currencyUSD"
+          }
+        }
+      },
+      {
+        "id": 6,
+        "title": "Storage Cost Optimization",
+        "type": "table",
+        "gridPos": {"h": 8, "w": 24, "x": 0, "y": 24},
+        "options": {
+          "showHeader": true
+        },
+        "targets": [
+          {
+            "expr": "sum by (storage_class, cloud_provider) (kube_persistentvolume_capacity_bytes) / 1024^3",
+            "format": "table",
+            "instant": true,
+            "refId": "A"
+          },
+          {
+            "expr": "sum by (storage_class, cloud_provider) (storage_cost_per_gb_month)",
+            "format": "table", 
+            "instant": true,
+            "refId": "B"
+          }
+        ],
+        "transformations": [
+          {
+            "id": "merge",
+            "options": {}
+          },
+          {
+            "id": "organize",
+            "options": {
+              "renameByName": {
+                "storage_class": "Storage Class",
+                "cloud_provider": "Cloud Provider",
+                "Value #A": "Capacity (GB)",
+                "Value #B": "Cost per GB/Month"
+              }
+            }
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            }
+          }
+        }
+      }
+    ],
+    "templating": {
+      "list": [
+        {
+          "name": "cloud_provider",
+          "type": "query",
+          "query": "label_values(cloud_billing_cost_usd, cloud_provider)",
+          "refresh": 1,
+          "includeAll": true,
+          "multi": true
+        },
+        {
+          "name": "time_range",
+          "type": "custom",
+          "options": [
+            {"text": "Last 24 hours", "value": "1d"},
+            {"text": "Last 7 days", "value": "7d"},
+            {"text": "Last 30 days", "value": "30d"}
+          ],
+          "current": {"text": "Last 7 days", "value": "7d"}
+        }
+      ]
+    }
+  }
+}

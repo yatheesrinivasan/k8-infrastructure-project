@@ -115,13 +115,13 @@ resource "helm_release" "prometheus" {
 
         dashboards = {
           custom = {
-            # Multi-cloud cluster overview
-            "multicloud-overview" = {
-              gnetId = 7249
-              revision = 1
-              datasource = "Prometheus"
-            }
-            # Kubernetes cluster monitoring
+            # Custom multi-cloud dashboards
+            "multicloud-cluster-overview" = file("${path.module}/../../monitoring/dashboards/kubernetes-cluster-overview.json")
+            "application-performance" = file("${path.module}/../../monitoring/dashboards/application-performance.json")
+            "security-compliance" = file("${path.module}/../../monitoring/dashboards/security-compliance.json")
+            "cost-optimization" = file("${path.module}/../../monitoring/dashboards/cost-optimization.json")
+            
+            # Community dashboards for additional monitoring
             "k8s-cluster-rsrc-use" = {
               gnetId = 13332
               revision = 12

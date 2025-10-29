@@ -1,0 +1,127 @@
+# Network Security Policies for Production Workloads
+
+---
+# Default Deny All Ingress Traffic
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-ingress
+  namespace: production
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+
+---
+# Allow Ingress Controller to Web App
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-ingress-to-web-app
+  namespace: production
+spec:
+  podSelector:
+    matchLabels:
+      app: secure-web-app
+  policyTypes:
+  - Ingress
+  ingress:
+  # Allow from NGINX Ingress Controller
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: ingress-nginx
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: ingress-nginx
+    ports:
+    - protocol: TCP
+      port: 8080
+
+---
+# Allow Web App to Database (if needed)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-web-app-to-database
+  namespace: production
+spec:
+  podSelector:
+    matchLabels:
+      app: secure-web-app
+  policyTypes:
+  - Egress
+  egress:
+  # Allow to DNS
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          name: kube-system
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
+  
+  # Allow to database
+  - to:
+    - podSelector:
+        matchLabels:
+          app: database
+    ports:
+    - protocol: TCP
+      port: 5432
+
+---
+# Allow Web App Egress for External APIs (if needed)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-web-app-external-apis
+  namespace: production
+spec:
+  podSelector:
+    matchLabels:
+      app: secure-web-app
+  policyTypes:
+  - Egress
+  egress:
+  # Allow HTTPS to external services
+  - ports:
+    - protocol: TCP
+      port: 443
+  # Allow HTTP for specific services (avoid if possible)
+  - to:
+    - namespaceSelector: {}
+      podSelector:
+        matchLabels:
+          app: internal-api
+    ports:
+    - protocol: TCP
+      port: 80
+
+---
+# Monitor Network Policy with Prometheus
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-monitoring-scraping
+  namespace: production
+spec:
+  podSelector:
+    matchLabels:
+      app: secure-web-app
+  policyTypes:
+  - Ingress
+  ingress:
+  # Allow Prometheus scraping
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: monitoring
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: prometheus
+    ports:
+    - protocol: TCP
+      port: 8080  # Metrics endpoint

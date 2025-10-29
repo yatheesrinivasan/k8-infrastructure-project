@@ -1,0 +1,105 @@
+# Secure Web Application Deployment for Public Access
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: secure-web-app
+  namespace: production
+  labels:
+    app: secure-web-app
+    tier: frontend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: secure-web-app
+  template:
+    metadata:
+      labels:
+        app: secure-web-app
+        tier: frontend
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+      - name: web-app
+        image: myregistry.azurecr.io/secure-web-app:v1.0.0
+        ports:
+        - containerPort: 8080
+          name: http
+        
+        # Security Context
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+        
+        # Resource Limits
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        
+        # Health Probes
+        livenessProbe:
+          httpGet:
+            path: /health/live
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 3
+        
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 5
+          failureThreshold: 3
+        
+        # Environment Variables
+        env:
+        - name: PORT
+          value: "8080"
+        - name: NODE_ENV
+          value: "production"
+        
+        # Volume Mounts for writable directories
+        volumeMounts:
+        - name: tmp-volume
+          mountPath: /tmp
+        - name: cache-volume
+          mountPath: /app/cache
+      
+      volumes:
+      - name: tmp-volume
+        emptyDir: {}
+      - name: cache-volume
+        emptyDir: {}
+
+---
+# Service for the Application
+apiVersion: v1
+kind: Service
+metadata:
+  name: secure-web-app-service
+  namespace: production
+  labels:
+    app: secure-web-app
+spec:
+  type: ClusterIP  # Internal service only
+  ports:
+  - port: 80
+    targetPort: 8080
+    protocol: TCP
+    name: http
+  selector:
+    app: secure-web-app
